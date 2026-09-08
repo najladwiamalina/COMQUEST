@@ -55,6 +55,22 @@ foreach ($numericEnvDefaults as $key => $default) {
     }
 }
 
+// Guard string env vars that must never be empty: env() only applies its
+// default when the var is unset, not when it's "" — an empty DB_CONNECTION
+// resolves to Manager::connection("") and throws "Database connection [] not configured."
+$requiredEnvDefaults = [
+    'DB_CONNECTION' => 'pgsql',
+];
+
+foreach ($requiredEnvDefaults as $key => $default) {
+    $value = getenv($key);
+    if ($value === false || trim((string) $value) === '') {
+        putenv("{$key}={$default}");
+        $_ENV[$key] = $default;
+        $_SERVER[$key] = $default;
+    }
+}
+
 if (empty(getenv('APP_KEY')) || trim((string)getenv('APP_KEY')) === '') {
     $fallbackKey = 'base64:eS9VdTJ4MlpMdkplNXBsdnZCRzVkZ0NqS3kxeWVnZDI=';
     putenv("APP_KEY={$fallbackKey}");
