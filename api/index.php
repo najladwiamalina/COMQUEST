@@ -1,5 +1,9 @@
 <?php
 
+// Suppress deprecation warnings from output
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+ini_set('display_errors', '0');
+
 // Catch and log uncaught exceptions directly to Vercel STDERR and display error details
 set_exception_handler(function (\Throwable $e) {
     error_log("LARAVEL ERROR: " . $e->getMessage() . "\n" . $e->getTraceAsString());
