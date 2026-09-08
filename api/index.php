@@ -1,19 +1,5 @@
 <?php
 
-// Suppress deprecation warnings from output
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
-ini_set('display_errors', '0');
-
-// Catch and log uncaught exceptions directly to Vercel STDERR and display error details
-set_exception_handler(function (\Throwable $e) {
-    error_log("LARAVEL ERROR: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-    if (!headers_sent()) {
-        http_response_code(500);
-    }
-    echo "<h2>Laravel Error</h2><p><strong>" . htmlspecialchars($e->getMessage()) . "</strong></p><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
-    exit;
-});
-
 // Prepare writable storage directories in /tmp for Vercel serverless environment
 $storageDirs = [
     '/tmp/storage/framework/views',
@@ -44,5 +30,22 @@ foreach ($envOverrides as $key => $val) {
     $_SERVER[$key] = $val;
 }
 
-// Forward the request to Laravel's public/index.php
-require __DIR__ . '/../public/index.php';
+// Suppress deprecation warnings from output but enable error display for debugging
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+
+try {
+    // Forward the request to Laravel's public/index.php
+    require __DIR__ . '/../public/index.php';
+} catch (\Throwable $e) {
+    error_log("LARAVEL CAUGHT ERROR: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
+    echo "<h2>Laravel Serverless Exception</h2>";
+    echo "<p><strong>" . htmlspecialchars($e->getMessage()) . "</strong></p>";
+    echo "<p>File: " . htmlspecialchars($e->getFile()) . " line " . $e->getLine() . "</p>";
+    echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+}
+
