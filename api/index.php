@@ -15,6 +15,21 @@ foreach ($storageDirs as $dir) {
     }
 }
 
+// Vercel's dashboard sometimes stores a variable as a literal empty string
+// instead of leaving it unset. Laravel's env() helper only falls back to its
+// own default when a variable is truly unset, not when it's "" — so an empty
+// value silently bypasses every hardcoded default throughout config/*.php and
+// the framework's own defaults (e.g. empty driver names reaching
+// Manager::createDriver(''), or empty numeric options reaching bcrypt/session
+// arithmetic). Stripping empty vars here lets env() fall back naturally
+// everywhere, instead of special-casing each variable this has broken so far.
+foreach ($_ENV as $key => $value) {
+    if ($value === '') {
+        putenv($key);
+        unset($_ENV[$key], $_SERVER[$key]);
+    }
+}
+
 // Set environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
 $envOverrides = [
     'VERCEL' => '1',
@@ -27,6 +42,7 @@ $envOverrides = [
     'QUEUE_CONNECTION' => 'sync',
     'APP_MAINTENANCE_DRIVER' => 'cache',
     'APP_MAINTENANCE_STORE' => 'array',
+    'DB_CONNECTION' => 'pgsql',
     'VIEW_COMPILED_PATH' => '/tmp/storage/framework/views',
     'APP_SERVICES_CACHE' => '/tmp/bootstrap/cache/services.php',
     'APP_PACKAGES_CACHE' => '/tmp/bootstrap/cache/packages.php',
@@ -38,38 +54,6 @@ foreach ($envOverrides as $key => $val) {
     putenv("{$key}={$val}");
     $_ENV[$key] = $val;
     $_SERVER[$key] = $val;
-}
-
-// Guard numeric env vars: an empty string bypasses Laravel's env() default and
-// later blows up arithmetic (e.g. session.lifetime * 60 in StartSession middleware)
-$numericEnvDefaults = [
-    'SESSION_LIFETIME' => '120',
-    'BCRYPT_ROUNDS' => '12',
-];
-
-foreach ($numericEnvDefaults as $key => $default) {
-    $value = getenv($key);
-    if ($value === false || !is_numeric($value)) {
-        putenv("{$key}={$default}");
-        $_ENV[$key] = $default;
-        $_SERVER[$key] = $default;
-    }
-}
-
-// Guard string env vars that must never be empty: env() only applies its
-// default when the var is unset, not when it's "" — an empty DB_CONNECTION
-// resolves to Manager::connection("") and throws "Database connection [] not configured."
-$requiredEnvDefaults = [
-    'DB_CONNECTION' => 'pgsql',
-];
-
-foreach ($requiredEnvDefaults as $key => $default) {
-    $value = getenv($key);
-    if ($value === false || trim((string) $value) === '') {
-        putenv("{$key}={$default}");
-        $_ENV[$key] = $default;
-        $_SERVER[$key] = $default;
-    }
 }
 
 if (empty(getenv('APP_KEY')) || trim((string)getenv('APP_KEY')) === '') {
