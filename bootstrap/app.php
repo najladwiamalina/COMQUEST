@@ -12,10 +12,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-       
-       Authenticate::class;
-       OnlyAdminMiddleware::class;
-    
+        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
