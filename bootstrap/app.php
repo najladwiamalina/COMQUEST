@@ -42,6 +42,11 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
         if (!is_numeric($config->get('hashing.bcrypt.rounds'))) {
             $config->set('hashing.bcrypt.rounds', 12);
         }
+
+        // Vercel terminates TLS at the edge and forwards over plain HTTP internally,
+        // so without this, asset()/url() generate http:// links that browsers block
+        // as mixed content on the https:// page.
+        $app['url']->forceScheme('https');
     });
 }
 
