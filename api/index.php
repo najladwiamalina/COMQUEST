@@ -15,8 +15,8 @@ foreach ($storageDirs as $dir) {
     }
 }
 
-// Set environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
-$envOverrides = [
+// Set default environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
+$envDefaults = [
     'VERCEL' => '1',
     'APP_DEBUG' => 'true',
     'LOG_CHANNEL' => 'stderr',
@@ -24,6 +24,8 @@ $envOverrides = [
     'SESSION_DRIVER' => 'cookie',
     'CACHE_STORE' => 'array',
     'CACHE_DRIVER' => 'array',
+    'QUEUE_CONNECTION' => 'sync',
+    'DB_CONNECTION' => 'pgsql',
     'VIEW_COMPILED_PATH' => '/tmp/storage/framework/views',
     'APP_SERVICES_CACHE' => '/tmp/bootstrap/cache/services.php',
     'APP_PACKAGES_CACHE' => '/tmp/bootstrap/cache/packages.php',
@@ -31,13 +33,16 @@ $envOverrides = [
     'APP_ROUTES_CACHE' => '/tmp/bootstrap/cache/routes.php',
 ];
 
-foreach ($envOverrides as $key => $val) {
-    putenv("{$key}={$val}");
-    $_ENV[$key] = $val;
-    $_SERVER[$key] = $val;
+foreach ($envDefaults as $key => $val) {
+    $currentVal = getenv($key);
+    if ($currentVal === false || trim((string)$currentVal) === '') {
+        putenv("{$key}={$val}");
+        $_ENV[$key] = $val;
+        $_SERVER[$key] = $val;
+    }
 }
 
-if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY']) && empty($_SERVER['APP_KEY'])) {
+if (empty(getenv('APP_KEY')) || trim((string)getenv('APP_KEY')) === '') {
     $fallbackKey = 'base64:eS9VdTJ4MlpMdkplNXBsdnZCRzVkZ0NqS3kxeWVnZDI=';
     putenv("APP_KEY={$fallbackKey}");
     $_ENV['APP_KEY'] = $fallbackKey;

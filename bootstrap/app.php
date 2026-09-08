@@ -25,12 +25,22 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
     $app->useStoragePath('/tmp/storage');
 
     $app->booted(function ($app) {
-        $app['config']->set([
-            'cache.default' => env('CACHE_STORE', 'array'),
-            'session.driver' => env('SESSION_DRIVER', 'cookie'),
-            'queue.default' => env('QUEUE_CONNECTION', 'sync'),
-            'logging.default' => env('LOG_CHANNEL', 'stderr'),
-        ]);
+        $config = $app['config'];
+
+        $fallbacks = [
+            'cache.default' => 'array',
+            'session.driver' => 'cookie',
+            'queue.default' => 'sync',
+            'logging.default' => 'stderr',
+            'database.default' => 'pgsql',
+        ];
+
+        foreach ($fallbacks as $key => $defaultVal) {
+            $val = $config->get($key);
+            if (empty($val) || trim((string)$val) === '') {
+                $config->set($key, $defaultVal);
+            }
+        }
     });
 }
 
