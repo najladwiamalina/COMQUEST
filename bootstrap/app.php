@@ -38,6 +38,10 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
         if (trim((string) $config->get('database.default')) === '') {
             $config->set('database.default', 'pgsql');
         }
+
+        if (!is_numeric($config->get('hashing.bcrypt.rounds'))) {
+            $config->set('hashing.bcrypt.rounds', 12);
+        }
     });
 }
 

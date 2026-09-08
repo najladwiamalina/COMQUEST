@@ -44,6 +44,7 @@ foreach ($envOverrides as $key => $val) {
 // later blows up arithmetic (e.g. session.lifetime * 60 in StartSession middleware)
 $numericEnvDefaults = [
     'SESSION_LIFETIME' => '120',
+    'BCRYPT_ROUNDS' => '12',
 ];
 
 foreach ($numericEnvDefaults as $key => $default) {
