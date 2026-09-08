@@ -23,6 +23,13 @@ $app = Application::configure(basePath: dirname(__DIR__))
 
 if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
     $app->useStoragePath('/tmp/storage');
+
+    config([
+        'cache.default' => env('CACHE_STORE', 'array'),
+        'session.driver' => env('SESSION_DRIVER', 'cookie'),
+        'queue.default' => env('QUEUE_CONNECTION', 'sync'),
+        'logging.default' => env('LOG_CHANNEL', 'stderr'),
+    ]);
 }
 
 return $app;

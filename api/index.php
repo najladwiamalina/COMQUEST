@@ -32,11 +32,9 @@ $envOverrides = [
 ];
 
 foreach ($envOverrides as $key => $val) {
-    if (empty(getenv($key)) && empty($_ENV[$key]) && empty($_SERVER[$key])) {
-        putenv("{$key}={$val}");
-        $_ENV[$key] = $val;
-        $_SERVER[$key] = $val;
-    }
+    putenv("{$key}={$val}");
+    $_ENV[$key] = $val;
+    $_SERVER[$key] = $val;
 }
 
 if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY']) && empty($_SERVER['APP_KEY'])) {
