@@ -30,6 +30,10 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
         $config->set('logging.default', 'stderr');
         $config->set('app.maintenance.driver', 'cache');
         $config->set('app.maintenance.store', 'array');
+
+        if (!is_numeric($config->get('session.lifetime'))) {
+            $config->set('session.lifetime', 120);
+        }
     });
 }
 

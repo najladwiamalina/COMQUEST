@@ -40,6 +40,21 @@ foreach ($envOverrides as $key => $val) {
     $_SERVER[$key] = $val;
 }
 
+// Guard numeric env vars: an empty string bypasses Laravel's env() default and
+// later blows up arithmetic (e.g. session.lifetime * 60 in StartSession middleware)
+$numericEnvDefaults = [
+    'SESSION_LIFETIME' => '120',
+];
+
+foreach ($numericEnvDefaults as $key => $default) {
+    $value = getenv($key);
+    if ($value === false || !is_numeric($value)) {
+        putenv("{$key}={$default}");
+        $_ENV[$key] = $default;
+        $_SERVER[$key] = $default;
+    }
+}
+
 if (empty(getenv('APP_KEY')) || trim((string)getenv('APP_KEY')) === '') {
     $fallbackKey = 'base64:eS9VdTJ4MlpMdkplNXBsdnZCRzVkZ0NqS3kxeWVnZDI=';
     putenv("APP_KEY={$fallbackKey}");
