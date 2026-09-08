@@ -17,6 +17,9 @@ foreach ($storageDirs as $dir) {
 
 // Set environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
 $envOverrides = [
+    'VERCEL' => '1',
+    'LOG_CHANNEL' => 'stderr',
+    'LOG_STACK' => 'stderr',
     'VIEW_COMPILED_PATH' => '/tmp/storage/framework/views',
     'APP_SERVICES_CACHE' => '/tmp/bootstrap/cache/services.php',
     'APP_PACKAGES_CACHE' => '/tmp/bootstrap/cache/packages.php',
