@@ -1,5 +1,15 @@
 <?php
 
+// Catch and log uncaught exceptions directly to Vercel STDERR and display error details
+set_exception_handler(function (\Throwable $e) {
+    error_log("LARAVEL ERROR: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
+    echo "<h2>Laravel Error</h2><p><strong>" . htmlspecialchars($e->getMessage()) . "</strong></p><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    exit;
+});
+
 // Prepare writable storage directories in /tmp for Vercel serverless environment
 $storageDirs = [
     '/tmp/storage/framework/views',
