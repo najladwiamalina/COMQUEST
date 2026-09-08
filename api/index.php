@@ -18,8 +18,12 @@ foreach ($storageDirs as $dir) {
 // Set environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
 $envOverrides = [
     'VERCEL' => '1',
+    'APP_DEBUG' => 'true',
     'LOG_CHANNEL' => 'stderr',
     'LOG_STACK' => 'stderr',
+    'SESSION_DRIVER' => 'cookie',
+    'CACHE_STORE' => 'array',
+    'CACHE_DRIVER' => 'array',
     'VIEW_COMPILED_PATH' => '/tmp/storage/framework/views',
     'APP_SERVICES_CACHE' => '/tmp/bootstrap/cache/services.php',
     'APP_PACKAGES_CACHE' => '/tmp/bootstrap/cache/packages.php',
@@ -28,9 +32,18 @@ $envOverrides = [
 ];
 
 foreach ($envOverrides as $key => $val) {
-    putenv("{$key}={$val}");
-    $_ENV[$key] = $val;
-    $_SERVER[$key] = $val;
+    if (empty(getenv($key)) && empty($_ENV[$key]) && empty($_SERVER[$key])) {
+        putenv("{$key}={$val}");
+        $_ENV[$key] = $val;
+        $_SERVER[$key] = $val;
+    }
+}
+
+if (empty(getenv('APP_KEY')) && empty($_ENV['APP_KEY']) && empty($_SERVER['APP_KEY'])) {
+    $fallbackKey = 'base64:eS9VdTJ4MlpMdkplNXBsdnZCRzVkZ0NqS3kxeWVnZDI=';
+    putenv("APP_KEY={$fallbackKey}");
+    $_ENV['APP_KEY'] = $fallbackKey;
+    $_SERVER['APP_KEY'] = $fallbackKey;
 }
 
 // Suppress deprecation warnings from output but enable error display for debugging
