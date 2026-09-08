@@ -17,6 +17,19 @@ ComQuest is an interactive quiz platform designed for Computer Science students 
 
 HTML, CSS, JavaScript, Bootstrap, PHP, Laravel
 
+## Live Demo
+
+Try the deployed application:
+
+**Website:** https://comquest-kappa.vercel.app
+
+### Demo Account
+
+**Username:** `demo`  
+**Password:** `demo123`
+
+> This account is provided for demonstration and evaluation purposes.
+
 ## Methodology
 
 Developed using **Agile Kanban** with an **Evolutionary Prototyping** approach.
