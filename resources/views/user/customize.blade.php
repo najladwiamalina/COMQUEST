@@ -101,7 +101,7 @@
             @endif
 
             <div class="itemtitle">
-                <span>TEMA</span>
+                <span>Tema</span>
             </div>
             
             <div class="container">
@@ -137,7 +137,7 @@
             </div>
 
             <div class="itemtitle">
-                <span>BANNER</span>
+                <span>Banner</span>
             </div>
 
             <div class="container">

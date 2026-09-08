@@ -270,7 +270,7 @@ nav.close li a .link-name {
 .dashboard {
   position: relative;
   left: 250px;
-  height: 100vh;
+  min-height: 100vh;
   width: calc(100% - 250px);
   padding: 10px 14px;
   transition: var(--tran-05);
@@ -356,6 +356,7 @@ nav.close ~ .dashboard .top {
 
 .dashboard .dash-content {
   padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .dash-content .title {
@@ -418,18 +419,21 @@ nav.close ~ .dashboard .top {
 }
 
 .dash-content .matkulcontainer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+  gap: 25px;
   margin-top: 25px;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: calc(100% - 20px);
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-bottom: 50px;
+  width: calc(100% - 50px);
 }
 
 .dash-content .matkulcontainer a {
   text-decoration: none;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .dash-content .matkulcontainer .matkul {
@@ -441,13 +445,12 @@ nav.close ~ .dashboard .top {
   padding-bottom: 15px;
   flex-direction: column;
   min-height: 240px;
-  width: 23%;
-  min-width: 235px;
+  width: 100%;
   box-sizing: border-box;
   border: 1px #2a2829 solid;
   border-radius: 20px;
   transition-duration: 0.7s;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   display: flex;
 }
 

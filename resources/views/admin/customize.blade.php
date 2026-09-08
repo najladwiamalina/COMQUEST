@@ -88,7 +88,9 @@
             <span class="text">Kostumisasi</span>
           </div>
 
-          TEMA
+          <div class="itemtitle">
+            <span>Tema</span>
+          </div>
           <div class="container">
             <div class="circlebox">
               <div class="circleblue"></div>
@@ -119,7 +121,9 @@
               <label>Cotton Candy</label>
             </div>
           </div>
-          BANNER
+          <div class="itemtitle">
+            <span>Banner</span>
+          </div>
           <div class="container">
             
           </div>

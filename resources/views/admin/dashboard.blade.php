@@ -107,11 +107,11 @@
 
           <div class="matkulcontainer">
             @foreach ($matkuls as $matkul)
-            <a href="{{ route('admin.bab.create', $matkul->id) }}">
               <div class="matkul S{{$matkul->semester}}">
+                <a href="{{ route('admin.bab.create', $matkul->id) }}" style="text-decoration: none; display: flex; flex-direction: column; width: 100%;">
                   <div class="matkulpic">
                     @if($matkul->photo)
-                    <img src="{{ asset('matkulfoto/' . $matkul->photo) }}" alt="Matkul Picture" />
+                      <img src="{{ asset('matkulfoto/' . $matkul->photo) }}" alt="Matkul Picture" />
                     @else
                       <!-- Tampilkan gambar default jika user tidak memiliki foto profil -->
                       <img src="{{ asset('images/download.png') }}" alt="picture"/>
@@ -120,8 +120,8 @@
                   <div class="textcontainer">
                     <span class="matkulcode">{{ $matkul->code }} |</span>
                     <span class="matkulname">{{ $matkul->name }}</span>
-              </div>
-          </a>
+                  </div>
+                </a>
                 <div class="buttons">
                   <a href="{{ route('admin.matkul.edit', $matkul->id) }}"><button class="btn">EDIT</button></a>
                   <form class="formbtn" action="{{ route('admin.matkul.destroy', $matkul->id) }}" method="POST" style="display:inline-block;">
