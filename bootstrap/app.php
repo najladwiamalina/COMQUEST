@@ -27,20 +27,12 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
     $app->booted(function ($app) {
         $config = $app['config'];
 
-        $fallbacks = [
-            'cache.default' => 'array',
-            'session.driver' => 'cookie',
-            'queue.default' => 'sync',
-            'logging.default' => 'stderr',
-            'database.default' => 'pgsql',
-        ];
-
-        foreach ($fallbacks as $key => $defaultVal) {
-            $val = $config->get($key);
-            if (empty($val) || trim((string)$val) === '') {
-                $config->set($key, $defaultVal);
-            }
-        }
+        $config->set('session.driver', 'cookie');
+        $config->set('cache.default', 'array');
+        $config->set('queue.default', 'sync');
+        $config->set('logging.default', 'stderr');
+        $config->set('app.maintenance.driver', 'cache');
+        $config->set('app.maintenance.store', 'array');
     });
 }
 

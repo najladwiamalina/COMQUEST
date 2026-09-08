@@ -15,8 +15,8 @@ foreach ($storageDirs as $dir) {
     }
 }
 
-// Set default environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
-$envDefaults = [
+// Set environment variables in putenv, $_ENV, and $_SERVER for Laravel 11
+$envOverrides = [
     'VERCEL' => '1',
     'APP_DEBUG' => 'true',
     'LOG_CHANNEL' => 'stderr',
@@ -25,7 +25,6 @@ $envDefaults = [
     'CACHE_STORE' => 'array',
     'CACHE_DRIVER' => 'array',
     'QUEUE_CONNECTION' => 'sync',
-    'DB_CONNECTION' => 'pgsql',
     'VIEW_COMPILED_PATH' => '/tmp/storage/framework/views',
     'APP_SERVICES_CACHE' => '/tmp/bootstrap/cache/services.php',
     'APP_PACKAGES_CACHE' => '/tmp/bootstrap/cache/packages.php',
@@ -33,13 +32,10 @@ $envDefaults = [
     'APP_ROUTES_CACHE' => '/tmp/bootstrap/cache/routes.php',
 ];
 
-foreach ($envDefaults as $key => $val) {
-    $currentVal = getenv($key);
-    if ($currentVal === false || trim((string)$currentVal) === '') {
-        putenv("{$key}={$val}");
-        $_ENV[$key] = $val;
-        $_SERVER[$key] = $val;
-    }
+foreach ($envOverrides as $key => $val) {
+    putenv("{$key}={$val}");
+    $_ENV[$key] = $val;
+    $_SERVER[$key] = $val;
 }
 
 if (empty(getenv('APP_KEY')) || trim((string)getenv('APP_KEY')) === '') {
